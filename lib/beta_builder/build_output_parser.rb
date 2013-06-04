@@ -7,8 +7,8 @@ module BetaBuilder
 
     def build_output_dir
       # yes, this is truly horrible, but unless somebody else can find a better way...
-      found = @output.split("\n").grep(/^Validate(.*)\/Xcode\/DerivedData\/(.*)-(.*)/).first
-      if found && found =~ /Validate [\"]?([^\"|$]*)/
+      found = @output.split("\n").grep(/^CodeSign(.*)\/Xcode\/DerivedData\/(.*)-(.*)/).first
+      if found && found =~ /CodeSign [\"]?([^\"|$]*)/
         reference = $1 
       else 
         raise "Cannot parse build_dir from build output."
@@ -27,7 +27,7 @@ class BuildOutputTest < Test::Unit::TestCase
   
   def test_parses_output_with_unquoted_build_path
   bop = BetaBuilder::BuildOutputParser.new(<<eos)
-Validate /Users/johnsmith/Library/Developer/Xcode/DerivedData/Application-hegpgdbpjylesafhkxnsymrzjavl/Build/Products/Distribution-iphoneos/Application.app
+CodeSign /Users/johnsmith/Library/Developer/Xcode/DerivedData/Application-hegpgdbpjylesafhkxnsymrzjavl/Build/Products/Distribution-iphoneos/Application.app
     cd /Users/user/app/ios
     setenv PATH \"/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Developer/usr/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin\"
     setenv PRODUCT_TYPE com.apple.product-type.application
@@ -38,7 +38,7 @@ eos
 
   def test_parses_output_with_quoted_build_path
     bop = BetaBuilder::BuildOutputParser.new(<<eos)
-Validate \"/Users/john smith/Library/Developer/Xcode/DerivedData/Application-hegpgdbpjylesafhkxnsymrzjavl/Build/Products/Distribution-iphoneos/Application.app\"
+CodeSign \"/Users/john smith/Library/Developer/Xcode/DerivedData/Application-hegpgdbpjylesafhkxnsymrzjavl/Build/Products/Distribution-iphoneos/Application.app\"
     cd /Users/user/app/ios
     setenv PATH \"/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Developer/usr/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin\"
     setenv PRODUCT_TYPE com.apple.product-type.application
